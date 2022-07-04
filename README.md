@@ -3,7 +3,7 @@
 <h1>(ECCV2022) EAGAN: Efficient Two-stage Evolutionary Architecture Search for GANs</h1>
 
 <div>
-    <a href='https://marsggbo.github.io/' target='_blank'>He Xin</a>, Guohao Ying, Bin Gao, Bo Han, and Xiaowen Chu.
+    Guohao Ying, Xin He, Bin Gao, Bo Han, and Xiaowen Chu.
 </div>
 
 </div>
