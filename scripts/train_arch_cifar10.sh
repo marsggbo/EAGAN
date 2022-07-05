@@ -11,7 +11,7 @@ python -m ipdb fully_train_arch.py \
 --n_critic 5 \
 --arch arch_cifar10 \
 --draw_arch False \
---genotypes_exp cifar10_D1.npy \
+--genotypes_exp cifar10_D.npy \
 --latent_dim 120 \
 --gf_dim 256 \
 --df_dim 128 \
