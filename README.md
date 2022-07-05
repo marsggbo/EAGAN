@@ -1,12 +1,17 @@
+<head>
+    <base target="_blank">
+</head>
 <div align="center">
 
 <h1>(ECCV2022) EAGAN: Efficient Two-stage Evolutionary Architecture Search for GANs</h1>
 
 <div>
-    <a href="https://github.com/ghying" target="_blank">Guohao Ying</a>$\dagger$, <a href="https://github.com/marsggbo" target="_blank">Xin He</a>$\dagger$, Bin Gao, Bo Han, and Xiaowen Chu$\ddagger$.
+    <a href='https://github.com/ghying' target='_blank'>Guohao Ying</a>$\dagger$, 
+    <a href='https://marsggbo.github.io/' target='_blank'>Xin He</a>$\dagger$, Bin Gao, Bo Han, and Xiaowen Chu$\ddagger$.
 </div>
 </div align="center">
-$$\dagger: \text{Equal contribution}. \ddagger: \text{Corresponding author (xwchu@ust.hk)}$$
+$$\dagger: \text{Equal contribution}. $$
+$$\ddagger: \text{Corresponding author (xwchu@ust.hk).}$$
 </div>
 
 </div>
