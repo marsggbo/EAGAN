@@ -1,5 +1,5 @@
 
-CUDA_VISIBLE_DEVICES=1 srun -n 1 --cpus-per-task 20 python fully_train_arch.py \
+python fully_train_arch.py \
 --gpu_ids 0 \
 --num_workers 16 \
 --gen_bs 256 \
@@ -11,7 +11,7 @@ CUDA_VISIBLE_DEVICES=1 srun -n 1 --cpus-per-task 20 python fully_train_arch.py \
 --n_critic 5 \
 --arch arch_cifar10 \
 --draw_arch False \
---genotypes_exp arch_cifar10 \
+--genotypes_exp stl10_D.npy \
 --latent_dim 120 \
 --gf_dim 256 \
 --df_dim 128 \
@@ -23,5 +23,4 @@ CUDA_VISIBLE_DEVICES=1 srun -n 1 --cpus-per-task 20 python fully_train_arch.py \
 --val_freq 5 \
 --num_eval_imgs 50000 \
 --exp_name arch_train_stl10 \
---data_path /home/datasets/stl10 \
---checkpoint /home/datasets/Flythings3D/MEGAN/exps/arch_train_stl10_2020_12_27_13_32_28
+--data_path /home/ygh/Documents/codes/MEGAN/datasets/stl10

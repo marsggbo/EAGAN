@@ -1,5 +1,5 @@
 
-python fully_train_arch.py \
+python search_dis_arch.py \
 --gpu_ids 0 \
 --num_workers 16 \
 --gen_bs 80 \
@@ -11,7 +11,7 @@ python fully_train_arch.py \
 --n_critic 5 \
 --arch arch_cifar10 \
 --draw_arch False \
---genotypes_exp cifar10_D1.npy \
+--genotypes_exp arch_train_cifar10_2022_02_21_00_04_09 \
 --latent_dim 120 \
 --gf_dim 256 \
 --df_dim 128 \
@@ -21,6 +21,6 @@ python fully_train_arch.py \
 --beta2 0.9 \
 --init_type xavier_uniform \
 --val_freq 5 \
---num_eval_imgs 50000 \
+--num_eval_imgs 5000 \
 --exp_name arch_train_cifar10 \
 --data_path /home/ygh/Documents/codes/MEGAN/datasets/cifar10

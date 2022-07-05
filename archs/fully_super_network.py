@@ -67,3 +67,35 @@ class Discriminator(nn.Module):
         output = self.l5(h)
       
         return output
+
+class simple_Discriminator(nn.Module):
+    def __init__(self):
+        super(simple_Discriminator, self).__init__()
+        self.block1 = nn.Sequential(
+            nn.Conv2d(3, 64, 4, stride=2, padding=1),
+            nn.BatchNorm2d(64),
+            nn.LeakyReLU(0.2),
+            nn.Conv2d(64, 128, 4, stride=2, padding=1),
+        )
+        self.block2 = nn.Sequential(
+            nn.Conv2d(128, 128, 4, stride=2, padding=1),
+            nn.BatchNorm2d(128),
+            nn.LeakyReLU(0.2),
+            nn.Conv2d(128, 128, 4, stride=2, padding=1),
+        )
+        self.block3 = nn.Sequential(
+            nn.Conv2d(128, 128, 4, stride=2, padding=1),
+            nn.BatchNorm2d(128),
+            nn.LeakyReLU(0.2),
+        )
+        self.l4 = nn.Linear(128, 1, bias=False)
+        self.l4 = nn.utils.spectral_norm(self.l4)
+    
+    def forward(self, x):
+        h = x
+        layers = [self.block1, self.block2, self.block3]
+        model = nn.Sequential(*layers)
+        h = model(h)
+        h = h.sum(2).sum(2)
+        output = self.l4(h)
+        return output

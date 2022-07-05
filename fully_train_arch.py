@@ -1,5 +1,3 @@
-# @Date    : 2020-12-30
-# @Author  : Guohao Ying
 
 from __future__ import absolute_import, division, print_function
 
@@ -11,7 +9,8 @@ from utils.utils import set_log_dir, save_checkpoint, save_is_checkpoint, create
 from utils.inception_score import _init_inception
 from utils.fid_score import create_inception_graph, check_or_download_inception
 from utils.flop_benchmark import print_FLOPs
-from archs.fully_super_network import Generator, Discriminator
+from archs.fully_super_network import Generator, Discriminator, simple_Discriminator
+import torchvision
 import torch
 import os
 import numpy as np
@@ -47,13 +46,24 @@ def main():
       args.gpu_ids = args.gpu_ids[1:]
     else:
       args.gpu_ids = args.gpu_ids
-    
     # genotype G and D
+    # genotype_G = np.load(os.path.join('exps', 'best_G.npy'))
+    # genotype_D = np.load(os.path.join('exps', 'stl10_D.npy'))
+    # genotype_D = np.load(os.path.join('exps', 'cifar10_D1.npy'))
     genotype_G = np.load(os.path.join('exps', 'best_G.npy'))
-    genotype_D = np.load(os.path.join('exps', 'best_D.npy'))
+    genotype_D = np.load(os.path.join('exps', args.genotypes_exp))
+    # genotype_D = np.load(os.path.join('exps', 'test_D.npy'))
+    # genotype_G = np.load(os.path.join('exps', 'test_G.npy'))
+    # genotype_G = np.load(os.path.join('exps', args.genotypes_exp, 'Model', 'best_gen_80_2.npy'))
+    # genotype_D = np.load(os.path.join('exps', 'best_dis_190_4.npy'))
+    # genotype_G = np.load(os.path.join('exps', 'best_gen_160_0.npy'))
+    # genotype_G = np.load(os.path.join('exps', 'test_G2.npy'))
+    
+    # genotype_D = np.load(os.path.join('exps', 'best_dis_180_5.npy'))
     # import network from genotype
     basemodel_gen = Generator(args, genotype_G)
     gen_net = torch.nn.DataParallel(basemodel_gen, device_ids=args.gpu_ids).cuda(args.gpu_ids[0])
+    # basemodel_dis = simple_Discriminator()
     basemodel_dis = Discriminator(args, genotype_D)
     dis_net = torch.nn.DataParallel(basemodel_dis, device_ids=args.gpu_ids).cuda(args.gpu_ids[0])
 
@@ -66,7 +76,7 @@ def main():
             elif args.init_type == 'orth':
                 nn.init.orthogonal_(m.weight.data)
             elif args.init_type == 'xavier_uniform':
-                nn.init.xavier_uniform(m.weight.data, 1.)
+                nn.init.xavier_uniform_(m.weight.data, 1.)
             else:
                 raise NotImplementedError('{} unknown inital type'.format(args.init_type))
         elif classname.find('BatchNorm2d') != -1:
@@ -95,11 +105,14 @@ def main():
 
     # fid stat
     if args.dataset.lower() == 'cifar10':
-        fid_stat = 'fid_stat/fid_stats_cifar10_train.npz'
+        fid_stat = './fid_stat/fid_stats_cifar10_train.npz'
     elif args.dataset.lower() == 'stl10':
-        fid_stat = 'fid_stat/stl10_train_unlabeled_fid_stats_48.npz'
+        fid_stat = './fid_stat/stl10_train_unlabeled_fid_stats_48.npz'
+    elif args.dataset.lower() == 'celeba':
+        fid_stat = './fid_stat/celeba128_inception_moments.npz'
     else:
         raise NotImplementedError(f'no fid stat for {args.dataset.lower()}')
+    print(fid_stat)
     assert os.path.exists(fid_stat)
     
     # initial
@@ -114,7 +127,7 @@ def main():
         assert os.path.exists(os.path.join('exps', args.checkpoint))
         checkpoint_file = os.path.join('exps', args.checkpoint, 'Model', 'checkpoint_best.pth')
         assert os.path.exists(checkpoint_file)
-        checkpoint = torch.load(checkpoint_file) 
+        checkpoint = torch.load(checkpoint_file)
         start_epoch = checkpoint['epoch']
         best_fid = checkpoint['best_fid']
         gen_net.load_state_dict(checkpoint['gen_state_dict'])
@@ -132,7 +145,7 @@ def main():
     else:
         # create new log dir
         assert args.exp_name
-        args.path_helper = set_log_dir('/home/datasets/Flythings3D/MEGAN/exps', args.exp_name)
+        args.path_helper = set_log_dir('exps', args.exp_name)
         logger = create_logger(args.path_helper['log_path'])
 
     logger.info(args)
@@ -159,8 +172,9 @@ def main():
         lr_schedulers = (gen_scheduler, dis_scheduler) if args.lr_decay else None
         train(args, gen_net, dis_net, gen_optimizer, dis_optimizer,
               gen_avg_param, train_loader, epoch, writer_dict, lr_schedulers)
-
-        if epoch % args.val_freq == 0 or epoch == int(args.max_epoch_D)-1:
+        if epoch % args.val_freq == 0 and epoch >300:
+        # if epoch % args.val_freq == 0:
+        # if epoch % args.val_freq == 0 or epoch == int(args.max_epoch_D)-1:
             backup_param = copy_params(gen_net)
             load_params(gen_net, gen_avg_param)
             inception_score, std, fid_score = validate(args, fixed_z, fid_stat, gen_net, writer_dict)
@@ -181,31 +195,32 @@ def main():
             is_best = False
             is_best_is = False
         # save model
-        avg_gen_net = deepcopy(gen_net)
-        load_params(avg_gen_net, gen_avg_param)
-        save_checkpoint({
-            'epoch': epoch + 1,
-            'model': args.arch,
-            'gen_state_dict': gen_net.state_dict(),
-            'dis_state_dict': dis_net.state_dict(),
-            'avg_gen_state_dict': avg_gen_net.state_dict(),
-            'gen_optimizer': gen_optimizer.state_dict(),
-            'dis_optimizer': dis_optimizer.state_dict(),
-            'best_fid': best_fid,
-            'path_helper': args.path_helper
-        }, is_best, args.path_helper['ckpt_path'])
-        save_is_checkpoint({
-            'epoch': epoch + 1,
-            'model': args.arch,
-            'gen_state_dict': gen_net.state_dict(),
-            'dis_state_dict': dis_net.state_dict(),
-            'avg_gen_state_dict': avg_gen_net.state_dict(),
-            'gen_optimizer': gen_optimizer.state_dict(),
-            'dis_optimizer': dis_optimizer.state_dict(),
-            'best_fid': best_fid,
-            'path_helper': args.path_helper
-        }, is_best_is, args.path_helper['ckpt_path'])
-        del avg_gen_net
+        if epoch % args.val_freq == 0:
+            avg_gen_net = deepcopy(gen_net)
+            load_params(avg_gen_net, gen_avg_param)
+            save_checkpoint({
+                'epoch': epoch + 1,
+                'model': args.arch,
+                'gen_state_dict': gen_net.state_dict(),
+                'dis_state_dict': dis_net.state_dict(),
+                'avg_gen_state_dict': avg_gen_net.state_dict(),
+                'gen_optimizer': gen_optimizer.state_dict(),
+                'dis_optimizer': dis_optimizer.state_dict(),
+                'best_fid': best_fid,
+                'path_helper': args.path_helper
+            }, is_best, args.path_helper['ckpt_path'])
+            save_is_checkpoint({
+                'epoch': epoch + 1,
+                'model': args.arch,
+                'gen_state_dict': gen_net.state_dict(),
+                'dis_state_dict': dis_net.state_dict(),
+                'avg_gen_state_dict': avg_gen_net.state_dict(),
+                'gen_optimizer': gen_optimizer.state_dict(),
+                'dis_optimizer': dis_optimizer.state_dict(),
+                'best_fid': best_fid,
+                'path_helper': args.path_helper
+            }, is_best_is, args.path_helper['ckpt_path'])
+            del avg_gen_net
 
 
 if __name__ == '__main__':

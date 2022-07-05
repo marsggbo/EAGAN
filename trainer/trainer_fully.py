@@ -1,3 +1,4 @@
+
 import os
 import numpy as np
 import torch
@@ -30,7 +31,8 @@ def train(args, gen_net: nn.Module, dis_net: nn.Module, gen_optimizer, dis_optim
         real_imgs = imgs.type(torch.cuda.FloatTensor)
 
         # sample noise
-        z = torch.cuda.FloatTensor(np.random.normal(0, 1, (imgs.shape[0], args.latent_dim)))
+        z = torch.cuda.FloatTensor(np.random.normal(
+            0, 1, (imgs.shape[0], args.latent_dim)))
 
         # train D
         dis_optimizer.zero_grad()
@@ -41,7 +43,7 @@ def train(args, gen_net: nn.Module, dis_net: nn.Module, gen_optimizer, dis_optim
 
         # Hinge loss
         d_loss = torch.mean(nn.ReLU(inplace=True)(1.0 - real_validity)) + \
-                 torch.mean(nn.ReLU(inplace=True)(1 + fake_validity))
+            torch.mean(nn.ReLU(inplace=True)(1 + fake_validity))
         d_loss.backward()
         if args.dataset == 'stl10':
             torch.nn.utils.clip_grad_norm_(dis_net.parameters(), max_norm=50)
@@ -49,14 +51,14 @@ def train(args, gen_net: nn.Module, dis_net: nn.Module, gen_optimizer, dis_optim
 
         writer.add_scalar('d_loss', d_loss.item(), global_steps)
 
-
         # train G
         if global_steps % args.n_critic == 0:
             gen_optimizer.zero_grad()
-            
+
             # sample noise
-            gen_z = torch.cuda.FloatTensor(np.random.normal(0, 1, (args.gen_bs, args.latent_dim)))
-            
+            gen_z = torch.cuda.FloatTensor(np.random.normal(
+                0, 1, (args.gen_bs, args.latent_dim)))
+
             gen_imgs = gen_net(gen_z)
             fake_validity = dis_net(gen_imgs)
 
@@ -64,7 +66,8 @@ def train(args, gen_net: nn.Module, dis_net: nn.Module, gen_optimizer, dis_optim
             g_loss = -torch.mean(fake_validity)
             g_loss.backward()
             if args.dataset == 'stl10':
-                torch.nn.utils.clip_grad_norm_(gen_net.parameters(), max_norm=50)
+                torch.nn.utils.clip_grad_norm_(
+                    gen_net.parameters(), max_norm=50)
             gen_optimizer.step()
 
             # learning rate
@@ -103,18 +106,22 @@ def validate(args, fixed_z, fid_stat, gen_net: nn.Module, writer_dict):
     img_grid = make_grid(sample_imgs, nrow=10, normalize=True, scale_each=True)
 
     # get fid and inception score
-    fid_buffer_dir = os.path.join(args.path_helper['sample_path'], 'fid_buffer')
+    fid_buffer_dir = os.path.join(
+        args.path_helper['sample_path'], 'fid_buffer')
     os.makedirs(fid_buffer_dir, exist_ok=True)
 
     eval_iter = args.num_eval_imgs // args.eval_batch_size
     img_list = list()
     for iter_idx in tqdm(range(eval_iter), desc='sample images'):
-        z = torch.cuda.FloatTensor(np.random.normal(0, 1, (args.eval_batch_size, args.latent_dim)))
+        z = torch.cuda.FloatTensor(np.random.normal(
+            0, 1, (args.eval_batch_size, args.latent_dim)))
 
         # generate a batch of images
-        gen_imgs = gen_net(z).mul_(127.5).add_(127.5).clamp_(0.0, 255.0).permute(0, 2, 3, 1).to('cpu', torch.uint8).numpy()
+        gen_imgs = gen_net(z).mul_(127.5).add_(127.5).clamp_(
+            0.0, 255.0).permute(0, 2, 3, 1).to('cpu', torch.uint8).numpy()
         for img_idx, img in enumerate(gen_imgs):
-            file_name = os.path.join(fid_buffer_dir, f'iter{iter_idx}_b{img_idx}.png')
+            file_name = os.path.join(
+                fid_buffer_dir, f'iter{iter_idx}_b{img_idx}.png')
             imsave(file_name, img)
         img_list.extend(list(gen_imgs))
 
@@ -124,11 +131,12 @@ def validate(args, fixed_z, fid_stat, gen_net: nn.Module, writer_dict):
 
     # get fid score
     logger.info('=> calculate fid score')
-    fid_score = calculate_fid_given_paths([fid_buffer_dir, fid_stat], inception_path=None)
-    
+    fid_score = calculate_fid_given_paths(
+        [fid_buffer_dir, fid_stat], inception_path=None)
+
     # del buffer
     os.system('rm -r {}'.format(fid_buffer_dir))
-    
+
     writer.add_image('sampled_images', img_grid, global_steps)
     writer.add_scalar('Inception_score/mean', mean, global_steps)
     writer.add_scalar('Inception_score/std', std, global_steps)
@@ -156,7 +164,8 @@ class LinearLrDecay(object):
         elif current_step >= self.decay_end_step:
             lr = self.end_lr
         else:
-            lr = self.start_lr - self.delta * (current_step - self.decay_start_step)
+            lr = self.start_lr - self.delta * \
+                (current_step - self.decay_start_step)
             for param_group in self.optimizer.param_groups:
                 param_group['lr'] = lr
         return lr
