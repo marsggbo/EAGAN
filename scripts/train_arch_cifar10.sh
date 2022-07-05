@@ -1,5 +1,5 @@
 
-python fully_train_arch.py \
+python -m ipdb fully_train_arch.py \
 --gpu_ids 0 \
 --num_workers 16 \
 --gen_bs 80 \
@@ -23,4 +23,4 @@ python fully_train_arch.py \
 --val_freq 5 \
 --num_eval_imgs 50000 \
 --exp_name arch_train_cifar10 \
---data_path /home/ygh/Documents/codes/MEGAN/datasets/cifar10
+--data_path ~/datasets/cifar10

@@ -15,4 +15,4 @@ python fully_test_arch.py \
 --num_eval_imgs 50000 \
 --eval_batch_size 100 \
 --exp_name arch_test_stl10 \
---data_path /home/ygh/Documents/codes/MEGAN/datasets/stl10
+--data_path ~/datasets/stl10

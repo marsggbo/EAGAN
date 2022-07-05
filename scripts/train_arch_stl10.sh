@@ -23,4 +23,4 @@ python fully_train_arch.py \
 --val_freq 5 \
 --num_eval_imgs 50000 \
 --exp_name arch_train_stl10 \
---data_path /home/ygh/Documents/codes/MEGAN/datasets/stl10
+--data_path ~/datasets/stl10

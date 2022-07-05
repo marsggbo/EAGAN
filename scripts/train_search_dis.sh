@@ -22,5 +22,5 @@ python search_dis_arch.py \
 --init_type xavier_uniform \
 --val_freq 5 \
 --num_eval_imgs 5000 \
---exp_name arch_train_cifar10 \
---data_path /home/ygh/Documents/codes/MEGAN/datasets/cifar10
+--exp_name arch_searchD_cifar10 \
+--data_path ~/datasets/cifar10

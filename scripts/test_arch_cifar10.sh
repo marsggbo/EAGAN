@@ -15,4 +15,4 @@ python fully_test_arch.py \
 --num_eval_imgs 50000 \
 --eval_batch_size 100 \
 --exp_name arch_test_cifar10 \
---data_path /cache/datasets/cifar10
+--data_path ~/datasets/cifar10
