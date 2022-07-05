@@ -149,7 +149,7 @@ If you find this work useful for your research, please kindly cite our paper:
 ```
 @inproceedings{ECCV2022EAGAN,
   title={EAGAN: Efficient Two-stage Evolutionary Architecture Search for GANs},
-  author={Xin He, Guohao Ying, Bin Gao, Bo Han, and Xiaowen Chu.},
+  author={Guohao Ying, Xin He, Bin Gao, Bo Han, and Xiaowen Chu.},
   booktitle={European Conference on Computer Vision (ECCV)},
   year={2022}
 }
