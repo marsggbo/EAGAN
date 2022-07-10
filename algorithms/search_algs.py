@@ -8,6 +8,10 @@ import os
 import numpy as np
 import random
 
+#To implement easy, wo use int number in the code to represent the 
+# corresponding operations. These are replaced with one-hot in the paper,
+# which can better explain our theory. Each int number is equal to an one-hot number.
+
 
 class GanAlgorithm():
 
@@ -19,12 +23,8 @@ class GanAlgorithm():
         self.dis_normal_nodes = 5
         self.archs = {}
         self.dis_archs = {}
-        # self.base_gen_arch = np.array(
-        #     [[1, 1, 1, 0, 2, 3, 1], [1, 1, 0, 1, 3, 0, 5], [0, 1, 0, 3, 0, 0, 3]])
-        # self.base_dis_arch = np.array(
-        #     [[3, 0, 3, 0, 2, 0, 0], [3, 0, 3, 0, 1, -1, -1], [3, 0, 3, 0, 1, -1, -1]])
-        self.base_gen_arch = np.load(os.path.join('exps', 'best_G.npy'))
-        self.base_dis_arch = np.load(os.path.join('exps', 'cifar10_D1.npy'))
+        self.base_dis_arch = np.array(
+            [[3, 0, 3, 0, 2, 0, 0], [3, 0, 3, 0, 1, -1, -1], [3, 0, 3, 0, 1, -1, -1]])
         
 
     def encode(self, genotype):
@@ -91,14 +91,14 @@ class GanAlgorithm():
         t = self.encode(new_genotype)
         return t in self.dis_archs
 
-    def search_mutate(self):
-        t = self.encode(self.base_gen_arch)
-        self.archs[t] = self.base_gen_arch
-        while(t in self.archs):
-            new_genotype = self.mutation_gen(self.base_gen_arch)
-            t = self.encode(new_genotype)
-        self.archs[t] = new_genotype
-        return new_genotype
+    # def search_mutate(self):
+    #     t = self.encode(self.base_gen_arch)
+    #     self.archs[t] = self.base_gen_arch
+    #     while(t in self.archs):
+    #         new_genotype = self.mutation_gen(self.base_gen_arch)
+    #         t = self.encode(new_genotype)
+    #     self.archs[t] = new_genotype
+    #     return new_genotype
 
     def search_mutate_dis(self):
         t = self.encode(self.base_dis_arch)

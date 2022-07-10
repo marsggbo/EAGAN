@@ -39,12 +39,8 @@ def main():
     else:
         args.gpu_ids = args.gpu_ids
 
-    # genotype G
-    genotypes_root = os.path.join('exps', args.genotypes_exp, 'Genotypes')
     gan_alg = GanAlgorithm(args)
 
-    #genotype_G = np.load(os.path.join(genotypes_root, 'latest_G.npy'))
-    # print(genotype_G)
     # import network from genotype
     basemodel_gen = Generator(args)
     gen_net = torch.nn.DataParallel(
@@ -117,11 +113,7 @@ def main():
     logger.info('Param size of D = %fMB', count_parameters_in_MB(dis_net))
     best_genotypes = None
 
-    # genotype_G = np.load(os.path.join('exps', 'best_G.npy'))
-    # genotype_G = np.load(os.path.join('exps', args.genotypes_exp, 'Model', 'best_gen_80_2.npy'))
-    genotype_G = np.load(os.path.join('exps', 'best_G.npy'))
-    # np.array([[1, 1, 1, 0, 2, 3, 1], [1, 1, 0, 1, 3, 0, 5], [0, 1, 0, 3, 0, 0, 3]])
-    gen_genotype = np.array([[1, 1, 1, 0, 3, 3, 1], [1, 1, 0, 1, 3, 3, 3], [0, 1, 0, 3, 3, 0, 3]])
+    gen_genotype = np.load(os.path.join('exps', 'best_G.npy'))
     dis_trainer = DisTrainer(args, gen_net, dis_net, gen_optimizer,
                              dis_optimizer, train_loader, gan_alg, gen_genotype)
     # search discriminator

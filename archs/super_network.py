@@ -1,4 +1,4 @@
-# @Date    : 2020-12-230
+# @Date    : 2020-12-30
 # @Author  : Guohao YIng
 
 
@@ -50,33 +50,6 @@ class Generator(nn.Module):
         output = self.to_rgb(h3)
 
         return output
-
-
-# class Discriminator(nn.Module):
-#     def __init__(self, args, activation=nn.ReLU()):
-#         super(Discriminator, self).__init__()
-#         self.ch = args.df_dim
-#         self.activation = activation
-#         self.block1 = OptimizedDisBlock(args, 3, self.ch)
-#         self.block2 = DisCell(args, self.ch, self.ch, activation=activation)
-#         self.block3 = DisCell(args, self.ch, self.ch, activation=activation)
-#         self.block4 = DisCell(args, self.ch, self.ch, activation=activation)
-#         self.l5 = nn.Linear(self.ch, 1, bias=False)
-#         if args.d_spectral_norm:
-#             self.l5 = nn.utils.spectral_norm(self.l5)
-
-#     def forward(self, x, genotypes):
-#         h = x
-#         h = self.block1(h)
-#         h = self.block2(h)
-#         h = self.block3(h)
-#         h = self.block4(h)
-#         h = self.activation(h)
-#         # Global average pooling
-#         h = h.sum(2).sum(2)
-#         output = self.l5(h)
-
-#         return output
 
 class Discriminator(nn.Module):
     def __init__(self, args, activation=nn.ReLU()):

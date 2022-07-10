@@ -41,16 +41,12 @@ def main():
         args.gpu_ids = args.gpu_ids
 
     # genotype G
-    genotypes_root = os.path.join('exps', args.genotypes_exp, 'Genotypes')
     gan_alg = GanAlgorithm(args)
 
-    #genotype_G = np.load(os.path.join(genotypes_root, 'latest_G.npy'))
-    # print(genotype_G)
     # import network from genotype
     basemodel_gen = Generator(args)
     gen_net = torch.nn.DataParallel(
         basemodel_gen, device_ids=args.gpu_ids).cuda(args.gpu_ids[0])
-    # basemodel_dis = Discriminator(args)
     basemodel_dis = simple_Discriminator()
     dis_net = torch.nn.DataParallel(
         basemodel_dis, device_ids=args.gpu_ids).cuda(args.gpu_ids[0])
@@ -84,14 +80,10 @@ def main():
     max_iter_D = args.max_epoch_D * len(train_loader)
     # set TensorFlow environment for evaluation (calculate IS and FID)
     _init_inception()
-    # inception_path = '/workspace/ADgan/classify_image_graph_def.pb'
+
     inception_path = check_or_download_inception('./tmp/imagenet/')
     create_inception_graph(inception_path)
-    # fid stat
-    # if args.dataset.lower() == 'cifar10':
-    #     fid_stat = '/workspace/ADgan/fid_stats_cifar10_train.npz'
-    # elif args.dataset.lower() == 'stl10':
-    #     fid_stat = '/workspace/ADgan/stl10_train_unlabeled_fid_stats_48.npz'
+
     if args.dataset.lower() == 'cifar10':
         fid_stat = './fid_stat/fid_stats_cifar10_train.npz'
     elif args.dataset.lower() == 'stl10':
@@ -106,12 +98,6 @@ def main():
     gen_scheduler = LinearLrDecay(gen_optimizer, args.g_lr, 0.0, 0, max_iter_D)
     dis_scheduler = LinearLrDecay(dis_optimizer, args.d_lr, 0.0, 0, max_iter_D)
 
-    dis_genotype = np.array(
-        [[3, 0, 3, 0, 2, 0, 0], [3, 0, 3, 0, 1, -1, -1], [3, 0, 3, 0, 1, -1, -1]])
-        
-    # dis_genotype = np.load(os.path.join(genotypes_root, 'best_dis_100_2.npy'))
-    # dis_genotype = np.load(os.path.join(genotypes_root, 'cifar10_D1.npy'))
-    dis_genotype = np.load(os.path.join('exps', 'cifar10_D1.npy'))
 
     # initial
     start_epoch = 0
@@ -130,7 +116,7 @@ def main():
     logger.info('Param size of G = %fMB', count_parameters_in_MB(gen_net))
     logger.info('Param size of D = %fMB', count_parameters_in_MB(dis_net))
     trainer_gen = GenTrainer(args, gen_net, dis_net, gen_optimizer,
-                             dis_optimizer, train_loader, gan_alg, dis_genotype)
+                             dis_optimizer, train_loader, gan_alg, None)
     best_genotypes = None
     # search genarator
 
