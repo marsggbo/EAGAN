@@ -11,7 +11,6 @@ python search_dis_arch.py \
 --n_critic 5 \
 --arch arch_cifar10 \
 --draw_arch False \
---genotypes_exp arch_train_cifar10_2022_02_21_00_04_09 \
 --latent_dim 120 \
 --gf_dim 256 \
 --df_dim 128 \

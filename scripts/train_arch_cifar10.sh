@@ -1,5 +1,5 @@
 
-python -m ipdb fully_train_arch.py \
+python fully_train_arch.py \
 --gpu_ids 0 \
 --num_workers 16 \
 --gen_bs 80 \

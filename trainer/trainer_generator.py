@@ -28,17 +28,12 @@ class GenTrainer():
         self.train_loader = train_loader
         self.gan_alg = gan_alg
         self.dis_genotype = dis_genotype
-        if args.warmup == 0:
-            self.genotypes = np.stack(
-                [gan_alg.search_mutate() for i in range(args.num_individual)], axis=0)
-        else:
-            self.genotypes = np.stack([gan_alg.search()
-                                       for i in range(args.num_individual)], axis=0)
+        self.genotypes = np.stack([gan_alg.search() for i in range(args.num_individual)], axis=0)
 
     def train(self, epoch, writer_dict, schedulers=None):
         writer = writer_dict['writer']
         gen_step = 0
-        genotype_D = self.dis_genotype
+
         # train mode
         gen_net = self.gen_net.train()
         dis_net = self.dis_net.train()
@@ -49,7 +44,6 @@ class GenTrainer():
             i = np.random.randint(0, self.args.num_individual, 1)[0]
             if epoch <= self.args.warmup:
                 genotype_G = self.gan_alg.search()
-                # logits = self.trainer.model.forward_random(input)
             else:
                 genotype_G = self.genotypes[i]
             # sample noise
@@ -113,11 +107,7 @@ class GenTrainer():
             is_values[idx] = is_value
             fid_values[idx] = fid_value
             params[idx] = param_szie
-        """
-        indexs = heapq.nlargest(self.args.num_individual, range(len(values)), values.__getitem__)
-        self.genotypes = genotypes[indexs]
-        max_index = values.index(max(values))
-        """
+
         logger.info(f'mean_IS_values: {np.mean(is_values)}, mean_FID_values: {np.mean(fid_values)},@ epoch {epoch}.')
         obj = [fid_values, params]
         keep, selected = CARS_NSGA(is_values, obj, keep_N), CARS_NSGA(
@@ -129,8 +119,6 @@ class GenTrainer():
         return genotypes[selected]
 
     def validate(self, genotype_G, fid_stat):
-        #writer = writer_dict['writer']
-        #global_steps = writer_dict['valid_global_steps']
         # eval mode
         gen_net = self.gen_net.eval()
         # get fid and inception score
@@ -175,7 +163,6 @@ class GenTrainer():
             if rand < 0.5:
                 alphas_c = self.mutation(
                     alphas[np.random.randint(0, alphas.shape[0])])
-            # elif rand < 0.5:
             else:
                 a, b = np.random.randint(
                     0, alphas.shape[0]), np.random.randint(0, alphas.shape[0])
@@ -183,11 +170,8 @@ class GenTrainer():
                     a, b = np.random.randint(
                         0, alphas.shape[0]), np.random.randint(0, alphas.shape[0])
                 alphas_c = self.crossover(alphas[a], alphas[b])
-            # else:
-            #     alphas_c = self.gan_alg.search()
             if not self.gan_alg.judge_repeat(alphas_c):
                 offsprings.append(alphas_c)
-        # offsprings = torch.cat([offspring.unsqueeze(0) for offspring in offsprings], dim=0)
         offsprings = np.stack(offsprings, axis=0)
         return offsprings
 

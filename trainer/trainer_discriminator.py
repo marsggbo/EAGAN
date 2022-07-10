@@ -27,11 +27,13 @@ class DisTrainer():
         self.train_loader = train_loader
         self.gan_alg = gan_alg
         self.gen_genotype = gen_genotype
-        if args.warmup == 0:
-            self.genotypes = np.stack(
-                [gan_alg.search_mutate_dis() for i in range(args.num_individual)], axis=0)
-        else:
-            self.genotypes = np.stack([gan_alg.search_dis()
+        # if args.warmup == 0:
+        #     self.genotypes = np.stack(
+        #         [gan_alg.search_mutate_dis() for i in range(args.num_individual)], axis=0)
+        # else:
+        #     self.genotypes = np.stack([gan_alg.search_dis()
+        #                                for i in range(args.num_individual)], axis=0)
+        self.genotypes = np.stack([gan_alg.search_dis()
                                        for i in range(args.num_individual)], axis=0)
         self.base_weights = None
         self.weights = [0 for i in range(args.num_individual)]
@@ -46,11 +48,7 @@ class DisTrainer():
         # train mode
         gen_net = self.gen_net.train()
         dis_net = self.dis_net.train()
-        # if epoch == self.args.warmup + 1:
-        #     self.base_weights = copy_weight(gen_net)
-        # if epoch > self.args.warmup and (epoch - self.args.warmup) % self.args.ga_interval == 1:
-        #     for i in range(len(self.weights)):
-        #         self.weights[i] = deepcopy(self.base_weights)
+
         for iter_idx, (imgs, _) in enumerate(tqdm(self.train_loader)):
             global_steps = writer_dict['train_global_steps']
             if start == 0 or global_steps % self.args.n_critic_search_dis == 1:
@@ -58,7 +56,6 @@ class DisTrainer():
                 if epoch <= self.args.warmup:
                     genotype_D = self.gan_alg.search_dis()
                 else:
-                    print(iter_idx)
                     genotype_D = self.genotypes[i]
                     gen_net.load_state_dict(self.weights[i])
                 start = 1
@@ -123,11 +120,6 @@ class DisTrainer():
             is_values[idx] = is_value
             fid_values[idx] = fid_value
             params[idx] = param_szie
-        """
-        indexs = heapq.nlargest(self.args.num_individual, range(len(values)), values.__getitem__)
-        self.genotypes = genotypes[indexs]
-        max_index = values.index(max(values))
-        """
         logger.info(f'mean_IS_values: {np.mean(is_values)}, mean_FID_values: {np.mean(fid_values)},@ epoch {epoch}.')
         obj = [fid_values, params]
         keep, selected = CARS_NSGA(is_values, obj, keep_N), CARS_NSGA(
@@ -187,11 +179,9 @@ class DisTrainer():
         offsprings = []
         while len(offsprings) != n_offspring:
             rand = np.random.rand()
-            # if rand < 0.25 + (0.25*epoch/self.args.max_epoch_D):
             if rand < 0.5:
                 alphas_c = self.mutation(
                     alphas[np.random.randint(0, alphas.shape[0])])
-            # elif rand < 0.5 + (0.5*epoch/self.args.max_epoch_D):
             else:
                 a, b = np.random.randint(
                     0, alphas.shape[0]), np.random.randint(0, alphas.shape[0])
@@ -199,11 +189,8 @@ class DisTrainer():
                     a, b = np.random.randint(
                         0, alphas.shape[0]), np.random.randint(0, alphas.shape[0])
                 alphas_c = self.crossover(alphas[a], alphas[b])
-            # else:
-            #     alphas_c = self.gan_alg.search_dis()
             if not self.gan_alg.judge_repeat_dis(alphas_c):
                 offsprings.append(alphas_c)
-        # offsprings = torch.cat([offspring.unsqueeze(0) for offspring in offsprings], dim=0)
         offsprings = np.stack(offsprings, axis=0)
         return offsprings
 

@@ -74,7 +74,6 @@ python search_gen_arch.py \
 --n_critic 1 \
 --arch arch_cifar10 \
 --draw_arch False \
---genotypes_exp arch_train_cifar10_2021_11_04_16_56_26 \
 --latent_dim 120 \
 --gf_dim 256 \
 --df_dim 128 \
@@ -90,8 +89,8 @@ python search_gen_arch.py \
 ```
 
 - `genotypes_exp`: specify the genotype path of initial discriminator. 
-  -  `exps/cifar10_D1.npy` is used by default.
-  -  if you want to specify a different initial discriminator, you can modify `dis_genotype` variable in `search_gen_arch.py`, e.g., `dis_genotype=np.load('./exps/cifar10_D2.npy')`
+  -  `exps/cifar10_D.npy` is used by default.
+  -  if you want to specify a different initial discriminator, you can modify `dis_genotype` variable in `search_gen_arch.py`, e.g., `dis_genotype=np.load('./exps/cifar10_D.npy')`
 
 ### 2. Search discriminator
 
@@ -99,6 +98,11 @@ python search_gen_arch.py \
 bash ./scripts/train_search_dis.sh
 ```
 
+### 3. Searched architecture
+
+./exps/best_G.npy is the best searched generator genotype that can be trained on cifar10 and stl10 datasets. Its details have been presented in the paper Fig.3. 
+./exps/cifar10_D.npy and ./exps/stl10_D.npy is the best searched discriminator genotype for
+cifar10 and stl10 datasets respectively, and their details can be found in the paper Fig.4. 
 
 ## Fully train
 
