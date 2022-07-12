@@ -100,8 +100,8 @@ bash ./scripts/train_search_dis.sh
 
 ### 3. Searched architecture
 
-./exps/best_G.npy is the best searched generator genotype that can be trained on cifar10 and stl10 datasets. Its details have been presented in the paper Fig.3. 
-./exps/cifar10_D.npy and ./exps/stl10_D.npy is the best searched discriminator genotype for
+- `./exps/best_G.npy` is the best searched generator genotype that can be trained on cifar10 and stl10 datasets, presented in the paper Fig.3.
+- `./exps/cifar10_D.npy` and `./exps/stl10_D.npy` are the best searched discriminator genotypes for
 cifar10 and stl10 datasets respectively, and their details can be found in the paper Fig.4. 
 
 ## Fully train
