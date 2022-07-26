@@ -1,49 +1,9 @@
-absl-py==0.13.0
-astor==0.8.1
-astunparse==1.6.3
-certifi==2021.5.30
-gast==0.3.3
-google-pasta==0.2.0
-graphviz==0.17
-grpcio==1.38.1
-h5py==2.10.0
 imageio==2.9.0
-Keras-Applications==1.0.8
-Keras-Preprocessing==1.1.2
-Markdown==3.3.4
-numpy @ file:///home/conda/feedstock_root/build_artifacts/numpy_1624399863733/work
-nvidia-cublas==11.5.1.101
-nvidia-cuda-cupti==11.3.58
-nvidia-cuda-nvcc==11.3.58
-nvidia-cuda-nvrtc==11.1.105
-nvidia-cuda-runtime==11.3.58
-nvidia-cudnn==8.2.0.51
-nvidia-cufft==10.4.2.58
-nvidia-curand==10.2.4.58
-nvidia-cusolver==11.1.1.58
-nvidia-cusparse==11.5.0.58
-nvidia-dali-cuda110==1.0.0
-nvidia-dali-nvtf-plugin==1.0.0+nv21.5
-nvidia-nccl==2.9.8
-nvidia-pyindex==1.0.9
-nvidia-tensorboard==1.15.0+nv21.4
-nvidia-tensorflow==1.15.5+nv21.5
-nvidia-tensorrt==7.2.3.4
-opt-einsum==3.3.0
+tensorflow-gpu==1.15.0
+torch==1.12
 Pillow==8.2.0
-protobuf==3.17.3
-python-dateutil==2.8.1
-scipy==1.7.0
-six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
-tensorboard @ https://pypi.ngc.nvidia.com/tensorboard/tensorboard-1.15.0-py2.py3-none-any.whl
-tensorboardX @ file:///home/conda/feedstock_root/build_artifacts/tensorboardx_1617715858833/work
-tensorflow-estimator==1.15.1
-termcolor==1.1.0
-torch==1.8.0+cu111
-torchaudio==0.8.0
-torchvision==0.9.0+cu111
 tqdm==4.61.1
-typing-extensions==3.10.0.0
-webencodings==0.5.1
-Werkzeug==2.0.1
-wrapt==1.12.1
+graphviz==0.17
+python-dateutil
+scipy
+tensorboardX
