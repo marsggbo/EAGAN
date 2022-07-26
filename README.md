@@ -3,7 +3,7 @@
 </head>
 <div align="center">
 
-<h1>(ECCV2022) EAGAN: Efficient Two-stage Evolutionary Architecture Search for GANs</h1>
+<h1>(ECCV2022) EAGAN: Efficient Two-stage Evolutionary Architecture Search for GANs<a href="https://arxiv.org/abs/2111.15097"> (PDF)</a></h1>
 
 <div>
     <a href='https://github.com/ghying' target='_blank'>Guohao Ying</a>$\dagger$, 
@@ -12,7 +12,9 @@
 </div align="center">
 $$\dagger: \text{Equal contribution}. $$
 $$\ddagger: \text{Corresponding author (xwchu@ust.hk).}$$
+
 </div>
+
 
 </div>
 
