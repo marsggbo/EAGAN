@@ -8,7 +8,7 @@
 
 <div>
     <a href='https://github.com/ghying' target='_blank'>Guohao Ying</a>$\dagger$, 
-    <a href='https://marsggbo.github.io/' target='_blank'>Xin He</a>$\dagger$, Bin Gao, Bo Han, and Xiaowen Chu$\ddagger$.
+    <a href='https://marsggbo.github.io/' target='_blank'>Xin He</a>$\dagger$, Bin Gao, Bo Han, and Xiaowen Chu $\ddagger$
 </div>
 </div align="center">
 $$\dagger: \text{Equal contribution}. $$
