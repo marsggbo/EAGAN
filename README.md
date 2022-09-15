@@ -3,6 +3,7 @@
 </head>
 <div align="center">
 
+    
 <h1>(ECCV2022) EAGAN: Efficient Two-stage Evolutionary Architecture Search for GANs<a href="https://arxiv.org/abs/2111.15097"> (PDF)</a></h1>
 
 <div>
@@ -15,10 +16,15 @@ $$\ddagger: \text{Corresponding author (xwchu@ust.hk).}$$
 
 </div>
 
-
 </div>
 
+https://user-images.githubusercontent.com/13477956/190312092-368c175c-afe9-45f8-b955-e956c8b310d3.mp4
+
+
+
 ## Introduction
+
+
 This is the official implementation of *EAGAN: Efficient Two-stage Evolutionary Architecture Search for GANs*. We introduce a novel NAS framework, namely **EAGAN**, to alleviate the instability when searching GANs. Our EAGAN decouples the search into two stages, where stage-1 searches G with a fixed D and adopts the many-to-one training strategy, and stage-2 searches D with the optimal G found in stage-1 and adopts the one-to-one training strategy and the weight-resetting strategy to enhance the stability of GAN training.
 
 
