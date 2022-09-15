@@ -4,7 +4,7 @@
 <div align="center">
 
     
-<h1>(ECCV2022) EAGAN: Efficient Two-stage Evolutionary Architecture Search for GANs<a href="https://arxiv.org/abs/2111.15097"> (PDF)</a></h1>
+<h1>(ECCV2022) EAGAN: Efficient Two-stage Evolutionary Architecture Search for GANs<a href="https://arxiv.org/abs/2111.15097">(PDF)</a><a href="https://github.com/marsggbo/ECCV2022-EAGAN/releases/download/video/eccv2022-slides.pptx">(slides)</a></h1>
 
 <div>
     <a href='https://github.com/ghying' target='_blank'>Guohao Ying</a>$\dagger$, 
